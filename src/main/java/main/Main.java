@@ -1,5 +1,6 @@
 package main;
 
+import algorithm.GibertDistance;
 import domain.CtrlDomain;
 import estructures.QueryConfig;
 import graph.Graph;
@@ -10,7 +11,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
+
 import com.google.gson.*;
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -53,7 +57,32 @@ public class Main {
                     QueryConfig config = gson.fromJson(content, QueryConfig.class);
                     System.out.println("Configuración cargada:");
                     System.out.println(config);
-                    // Puedes pasar `config` a CtrlDomain u otros módulos aquí
+
+                    // Crear conjuntos auxiliares
+                    Set<String> usefullTags = new HashSet<>();
+                    Set<String> unusedTags = new HashSet<>();
+
+                    // Llamar al método del dominio
+                    CDomain.courseDistances(
+                            config.tags,
+                            usefullTags,
+                            unusedTags,
+                            config.modality,
+                            config.userStatus,
+                            config.minDuration,
+                            config.maxDuration,
+                            config.organizers,
+                            config.format,
+                            config.duration,
+                            config.organizer,
+                            config.status,
+                            config.strongTags
+                    );
+
+                    // Mostrar información de salida
+                    System.out.println("Tags útiles: " + usefullTags);
+                    System.out.println("Tags no encontrados: " + unusedTags);
+                    GibertDistance.getInstance().saveRecommendationsAsJson("settings/output/1.json");
 
                 } catch (IOException e) {
                     System.err.println("Error al leer el archivo: " + e.getMessage());

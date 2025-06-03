@@ -1,8 +1,12 @@
 package algorithm;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import domain.CtrlDomain;
+import item.Item;
 import item.ItemManager;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -352,6 +356,46 @@ public class GibertDistance {
         }
 
         return s;
+    }
+
+    public void saveRecommendationsAsJson(String outputPath) {
+        LinkedList<Integer> recommended = getRecomended();
+        List<Map<String, Object>> outputList = new LinkedList<>();
+
+        for (Integer id : recommended) {
+            Item item = ItemManager.getInstance().getItem(id);
+            Map<String, Object> entry = new LinkedHashMap<>();
+
+            try {
+                entry.put("Activity.name", item.attributes.get("Activity.name").getValue());
+                entry.put("tags", item.getTags());
+                entry.put("Start.Date", item.attributes.get("Start.Date").getValue());
+                entry.put("End..Date", item.attributes.get("End..Date").getValue());
+                entry.put("status", item.status);
+                entry.put("location", item.modality);
+                entry.put("duration_hours", item.duration);
+                entry.put("Organizer.Node", item.attributes.get("Organizer.Node").getValue());
+                entry.put("Organizer..entity.", item.attributes.get("Organizer..entity.").getValue());
+                entry.put("Programa...enllaçar.document", item.attributes.get("Programa...enllaçar.document").getValue());
+                entry.put("Distance", Math.round(item.distance * 1000.0) / 1000.0);
+
+                outputList.add(entry);
+            } catch (Exception e) {
+                System.err.println("Error accediendo a atributos del item " + id + ": " + e.getMessage());
+            }
+        }
+
+        // Crear carpeta si no existe
+        File outputFile = new File(outputPath);
+        outputFile.getParentFile().mkdirs();
+
+        try (FileWriter writer = new FileWriter(outputFile)) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(outputList, writer);
+            System.out.println("Recomendaciones guardadas en: " + outputPath);
+        } catch (IOException e) {
+            System.err.println("Error al escribir el archivo JSON: " + e.getMessage());
+        }
     }
 
     public LinkedList<Double> trueDistance(LinkedList<Double> l){

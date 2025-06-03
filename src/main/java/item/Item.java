@@ -12,7 +12,7 @@ import java.util.Set;
 public class Item {
 
     private int id;
-    private HashMap<String, Column> attributes;
+    public HashMap<String, Column> attributes;
 
     public Set<String> tags;
     public double duration;
