@@ -1,0 +1,15 @@
+{
+  "tags": ["programming", "AI", "data-science"],
+  "organizers": ["OpenAI", "Universidad de Twente"],
+  "minDuration": 5,
+  "maxDuration": 20,
+  "numCourses": 3,
+  "modality": "online",
+  "time": "evening",
+  "userStatus": "enrolled",
+  "format": true,
+  "organizer": false,
+  "duration": true,
+  "status": false,
+  "strongTags": true
+}

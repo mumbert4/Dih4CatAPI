@@ -1,4 +1,4 @@
   {
-  "pathData": "Settings/Data/formacions3.csv",
-  "pathOnt": "Settings/Ontologies/Dih4CatEN.ont"
+  "pathData": "settings/data/formacions3.csv",
+  "pathOnt": "settings/ontologies/Dih4CatEN.ont"
 }
