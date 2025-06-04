@@ -82,8 +82,8 @@ public class Main {
                     // Mostrar información de salida
                     System.out.println("Tags útiles: " + usefullTags);
                     System.out.println("Tags no encontrados: " + unusedTags);
-                    GibertDistance.getInstance().saveRecommendationsAsJson("settings/output/1.json");
-
+                    GibertDistance.getInstance().saveRecommendationsAsJson("settings/output/"+input+".json");
+                    GibertDistance.getInstance().saveRecommendationsAsPDF("settings/output/"+input+".pdf");
                 } catch (IOException e) {
                     System.err.println("Error al leer el archivo: " + e.getMessage());
                 }

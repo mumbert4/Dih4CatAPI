@@ -2,14 +2,18 @@ package algorithm;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfWriter;
 import domain.CtrlDomain;
 import item.Item;
 import item.ItemManager;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 public class GibertDistance {
 
@@ -395,6 +399,75 @@ public class GibertDistance {
             System.out.println("Recomendaciones guardadas en: " + outputPath);
         } catch (IOException e) {
             System.err.println("Error al escribir el archivo JSON: " + e.getMessage());
+        }
+    }
+
+    public void saveRecommendationsAsPDF(String outputPath) {
+        LinkedList<Integer> recommended = getRecomended();
+
+        try {
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
+            document.open();
+
+            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
+            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
+            Font textFont = FontFactory.getFont(FontFactory.HELVETICA, 9);
+
+            document.add(new Paragraph("Cursos Recomendados", titleFont));
+            document.add(Chunk.NEWLINE);
+
+            for (Integer id : recommended) {
+                Item item = ItemManager.getInstance().getItem(id);
+
+                Table table = new Table(2);
+                table.setWidth(100);
+                table.setPadding(3);
+
+                table.addCell(new Cell(new Phrase("Activity.name", headerFont)));
+                table.addCell(new Cell(new Phrase(String.valueOf(item.attributes.get("Activity.name").getValue()), textFont)));
+
+                table.addCell("Tags");
+                table.addCell(item.getTags().toString());
+
+                table.addCell("Start.Date");
+                table.addCell(String.valueOf(item.attributes.get("Start.Date").getValue()));
+
+
+                table.addCell("End..Date");
+                table.addCell(String.valueOf(item.attributes.get("End..Date").getValue()));
+
+                table.addCell("Status");
+                table.addCell(item.status);
+
+                table.addCell("Location");
+                table.addCell(item.modality);
+
+                table.addCell("Duration (hours)");
+                table.addCell(String.valueOf(item.duration));
+
+                table.addCell("Organizer.Node");
+                table.addCell(String.valueOf(item.attributes.get("Organizer.Node").getValue()));
+
+                table.addCell("Organizer..entity.");
+                table.addCell(String.valueOf(item.attributes.get("Organizer..entity.").getValue()));
+
+                table.addCell("Programa...enllaçar.document");
+                table.addCell(String.valueOf(item.attributes.get("Programa...enllaçar.document").getValue()));
+
+                table.addCell("Distance");
+                table.addCell(String.valueOf(Math.round(item.distance * 1000.0) / 1000.0));
+
+                document.add(table);
+                document.add(Chunk.NEWLINE);
+            }
+
+            document.close();
+            System.out.println("PDF guardado en: " + outputPath);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al crear PDF: " + e.getMessage());
         }
     }
 

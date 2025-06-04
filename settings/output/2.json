@@ -1,0 +1,84 @@
+[
+  {
+    "Activity.name": "Masterclass Seguretat i confiança dels sistemes basats en IA",
+    "tags": [
+      "ia",
+      "ciberseguretat"
+    ],
+    "Start.Date": "2023-04-20",
+    "End..Date": "2023-04-20",
+    "status": "active",
+    "location": "Online",
+    "duration_hours": 1.5,
+    "Organizer.Node": "Intel·ligència Artificial",
+    "Organizer..entity.": "Eurecat (CIDAI)",
+    "Programa...enllaçar.document": "https://cidai.eu/masterclass-seguretat-confianca-sistemes-ia/",
+    "Distance": 0.662
+  },
+  {
+    "Activity.name": "Digital Materiality: Exploring the emerging potential of combining Artificial Intelligence and Additive Manufacturing to unlock new design and manufacturing possibilities",
+    "tags": [
+      "additive manufacturing",
+      "digitalización",
+      "ia"
+    ],
+    "Start.Date": "2023-12-14",
+    "End..Date": "2023-12-14",
+    "status": "active",
+    "location": "Presential",
+    "duration_hours": 4.0,
+    "Organizer.Node": "Fabricació Additiva i Impressió 3D + Intel·ligència Artificial",
+    "Organizer..entity.": "LEITAT",
+    "Programa...enllaçar.document": "",
+    "Distance": 0.804
+  },
+  {
+    "Activity.name": "Diseño y fabricación de chips de fotónica integrada - VLC",
+    "tags": [
+      "fotonica",
+      "chips",
+      "diseño",
+      "fabricacion avanzada"
+    ],
+    "Start.Date": "2023-05-12",
+    "End..Date": "2023-05-12",
+    "status": "active",
+    "location": "Online",
+    "duration_hours": 1.0,
+    "Organizer.Node": "Fotònica",
+    "Organizer..entity.": "ICFO",
+    "Programa...enllaçar.document": "https://www.secpho.org/agenda/vlcphotonics/",
+    "Distance": 0.868
+  },
+  {
+    "Activity.name": "Explicabilitat en Visió Artificial",
+    "tags": [
+      "ia",
+      "vision artificial"
+    ],
+    "Start.Date": "2022-10-14",
+    "End..Date": "2022-10-14",
+    "status": "active",
+    "location": "Online",
+    "duration_hours": 1.5,
+    "Organizer.Node": "Intel·ligència Artificial",
+    "Organizer..entity.": "Eurecat (CIDAI)",
+    "Programa...enllaçar.document": "https://cidai.eu/masterclass-explicabilitat-en-visio-artificial/",
+    "Distance": 0.881
+  },
+  {
+    "Activity.name": "Masterclass Hacia la fábrica inteligente. ¿Qué puede hacer la IA?",
+    "tags": [
+      "ia"
+    ],
+    "Start.Date": "2023-05-31",
+    "End..Date": "2023-05-31",
+    "status": "active",
+    "location": "Online",
+    "duration_hours": 1.5,
+    "Organizer.Node": "Intel·ligència Artificial",
+    "Organizer..entity.": "Eurecat (CIDAI)",
+    "Programa...enllaçar.document": "https://cidai.eu/es/masterclass-hacia-la-fabrica-inteligente/",
+    "Distance": 0.881
+  }
+]
