@@ -1,0 +1,15 @@
+{
+  "tags": ["hacking", "iot", "data science"],
+  "organizers": ["UPC", "BSC","CVC"],
+  "minDuration": 1,
+  "maxDuration": 90,
+  "numCourses": 5,
+  "modality": "Hybrid",
+  "time": "Hours",
+  "userStatus": "active",
+  "format": false,
+  "organizer": false,
+  "duration": false,
+  "status": true,
+  "strongTags": false
+}

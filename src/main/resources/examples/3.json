@@ -1,0 +1,15 @@
+{
+  "tags": ["software", "ciberseguretat", "programming"],
+  "organizers": ["CIDAI", "ACCIÓ","Eurecat"],
+  "minDuration": 20,
+  "maxDuration": 60,
+  "numCourses": 5,
+  "modality": "Presential",
+  "time": "Hours",
+  "userStatus": "executed",
+  "format": true,
+  "organizer": false,
+  "duration": false,
+  "status": false,
+  "strongTags": false
+}

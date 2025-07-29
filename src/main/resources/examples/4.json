@@ -1,0 +1,15 @@
+{
+  "tags": ["computer", "ciberseguretat", "fabricacion avanzada"],
+  "organizers": ["ICFO", "LEITAT", "UPC", "CIM UPC", "Eurecat (CIDAI)", "I2cat", "CVC", "i2CAT", "BSC", "CIDAI", "FOMENT", "ACCIÓ", "Eurecat", "PIMEC", "CVC (CIDAI)", "UPC/PIMEC"],
+  "minDuration": 40,
+  "maxDuration": 90,
+  "numCourses": 5,
+  "modality": "Hybrid",
+  "time": "Hours",
+  "userStatus": "All",
+  "format": false,
+  "organizer": false,
+  "duration": false,
+  "status": false,
+  "strongTags": true
+}

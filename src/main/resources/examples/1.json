@@ -1,0 +1,15 @@
+{
+  "tags": ["programming", "ai", "data science"],
+  "organizers": ["UPC", "BSC"],
+  "minDuration": 5,
+  "maxDuration": 20,
+  "numCourses": 5,
+  "modality": "Online",
+  "time": "Hours",
+  "userStatus": "Planned",
+  "format": false,
+  "organizer": false,
+  "duration": false,
+  "status": false,
+  "strongTags": false
+}
