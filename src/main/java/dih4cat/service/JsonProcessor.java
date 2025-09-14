@@ -47,10 +47,10 @@ public class JsonProcessor {
         System.out.println("Ruta: " + ruta);
         System.out.println(System.getProperty("user.dir"));
 
-        URL url = getClass().getClassLoader().getResource("examples/1.json");
+        URL url = getClass().getClassLoader().getResource(ruta);
         System.out.println("URL del recurso: " + url);
 
-        InputStream input = getClass().getClassLoader().getResourceAsStream("examples/1.json");
+        InputStream input = getClass().getClassLoader().getResourceAsStream(ruta);
         System.out.println("¿InputStream nulo? " + (input == null));
         if (input == null) {
             System.out.println("No se encontro el archivo " + ruta);
@@ -87,8 +87,10 @@ public class JsonProcessor {
                 // Mostrar información de salida
                 System.out.println("Tags útiles: " + usefullTags);
                 System.out.println("Tags no encontrados: " + unusedTags);
-                GibertDistance.getInstance().saveRecommendationsAsJson("settings/output/"+input+".json");
-                GibertDistance.getInstance().saveRecommendationsAsPDF("settings/output/"+input+".pdf");
+                String outputPath = "settings/output/"+filename.substring(0,filename.lastIndexOf('.'));
+                System.out.println(outputPath);
+                GibertDistance.getInstance().saveRecommendationsAsJson(outputPath+".json");
+                GibertDistance.getInstance().saveRecommendationsAsPDF(outputPath+".pdf");
                 try (FileReader reader = new FileReader("settings/output/"+filename, StandardCharsets.UTF_8)) {
                     return gson.fromJson(reader, Object.class);
                 }
@@ -103,9 +105,10 @@ public class JsonProcessor {
 
 
     public static void getPaths(){
-        String jsonFilePath = "settings/paths.json"; // Ruta del fichero JSON
+        String jsonFilePath = "/home/miquel/Dih4CatAPI/settings/paths.json"; // Ruta del fichero JSON
         String pathOnt = null;
         String pathData = null;
+        System.out.println("JSON PATH "+jsonFilePath);
         try (BufferedReader reader = new BufferedReader(new FileReader(jsonFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {

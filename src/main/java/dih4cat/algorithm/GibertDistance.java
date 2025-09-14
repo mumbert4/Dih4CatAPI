@@ -178,10 +178,7 @@ public class GibertDistance {
         distanceCourses2 = new ArrayList<>();
         comparator = 0;//iniciam a avg
         Set<Integer> courses = d.getIDs();
-        System.out.println("Status cerca: " + userStatus);
-        System.out.println("Antes de filtrat: " + courses.size());
         courses = filtrat(courses, format, duration, organizer, status, modality, organizers, minDuration, maxDuration, userStatus, strongTags, selectedTags);
-        System.out.println("Despres de filtrat: " + courses.size());
         numCourses = courses.size();
         for(Integer i : courses){// iteram els cursos
             LinkedList<Double> l = new LinkedList<Double>();
@@ -309,18 +306,15 @@ public class GibertDistance {
             }
             return avg/(double)(userTags.size()*courseTags.size());
         }
-        System.out.println("Metode min");
         //return min;
         for(String c: userTags){
             Double min = 999999999.0;
-            System.out.println("Tags que comparam:" + c + " amb " + courseTags);
             for(String u: courseTags){
                 Double dist = distancesTags.get(d.stringToId(c)).get(d.stringToId(u));//distacnia entre els tags
                 if(dist<min){
                     min = dist;
                 }
             }
-            System.out.println("Distancia minima: " + min);
             avg += min;
         }
         return avg/(double)(userTags.size());

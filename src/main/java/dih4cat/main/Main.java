@@ -82,8 +82,12 @@ public class Main {
                     // Mostrar información de salida
                     System.out.println("Tags útiles: " + usefullTags);
                     System.out.println("Tags no encontrados: " + unusedTags);
-                    GibertDistance.getInstance().saveRecommendationsAsJson("settings/output/"+input+".json");
-                    GibertDistance.getInstance().saveRecommendationsAsPDF("settings/output/"+input+".pdf");
+                    String outputPath = "settings/output/"+input;
+                    System.out.println(outputPath);
+                    System.out.println("Iniciando el programa...");
+                    System.out.println("Path de salida: " + outputPath);
+                    GibertDistance.getInstance().saveRecommendationsAsJson(outputPath+".json");
+                    GibertDistance.getInstance().saveRecommendationsAsPDF(outputPath+input+".pdf");
                 } catch (IOException e) {
                     System.err.println("Error al leer el archivo: " + e.getMessage());
                 }
@@ -98,6 +102,7 @@ public class Main {
     public static void getPaths(){
         String jsonFilePath = "settings/paths.json"; // Ruta del fichero JSON
         String pathOnt = null;
+        System.out.println(System.getProperty("user.dir"));
         String pathData = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(jsonFilePath))) {
             String line;
