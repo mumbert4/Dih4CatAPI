@@ -2,3 +2,10 @@
   "pathData": "settings/data/formacions3.csv",
   "pathOnt": "settings/ontologies/Dih4Cat.ont"
 }
+
+//
+//  afegir camp page al json
+//  num_cursos: 5
+//  page 1: retornam del 1 al 5
+//
+//  page 2: retornam del 6 al 10

@@ -105,9 +105,10 @@ public class JsonProcessor {
 
 
     public static void getPaths(){
-        String jsonFilePath = "/home/miquel/Dih4CatAPI/settings/paths.json"; // Ruta del fichero JSON
+        String jsonFilePath = "settings/paths.json"; // Ruta del fichero JSON
         String pathOnt = null;
         String pathData = null;
+        System.out.println(System.getProperty("user.dir"));
         System.out.println("JSON PATH "+jsonFilePath);
         try (BufferedReader reader = new BufferedReader(new FileReader(jsonFilePath))) {
             String line;

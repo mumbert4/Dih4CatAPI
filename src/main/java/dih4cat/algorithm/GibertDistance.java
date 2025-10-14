@@ -101,7 +101,7 @@ public class GibertDistance {
     }
 
     public void csvMatrix(){//guardam matriu distancies a un csv
-        try (FileWriter writer = new FileWriter("/home/miquel/Documentos/Dih4Cat/Settings/matrix.csv")) {
+        try (FileWriter writer = new FileWriter("settings/matrix.csv")) {
             // Escribimos el encabezado de la matriz con los nombres en la primera fila
             writer.append("       ,");
             for (Integer col : distancesTags.keySet()) {
