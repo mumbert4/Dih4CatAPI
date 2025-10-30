@@ -13,6 +13,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -26,6 +28,8 @@ public class JsonProcessor {
     public static String onto = "";
     public static boolean getOnto,getData;
     private static CtrlDomain CDomain;
+
+    private final Gson gson = new Gson();
 
     public static void initialize(){
         getOnto = false;
@@ -42,64 +46,51 @@ public class JsonProcessor {
         }
     }
 
-    public Object procesarArchivo(String filename) throws Exception {
-        String ruta = "examples/" + filename;
-        System.out.println("Ruta: " + ruta);
-        System.out.println(System.getProperty("user.dir"));
+    public Object procesarJson(JsonElement jsonBody) throws Exception {
+        System.out.println("JSON recibido: " + jsonBody);
+        QueryConfig config = gson.fromJson(jsonBody, QueryConfig.class);
+        System.out.println("Configuración parseada desde JSON:");
+        System.out.println(config);
 
-        URL url = getClass().getClassLoader().getResource(ruta);
-        System.out.println("URL del recurso: " + url);
+        String timestamp = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").format(LocalDateTime.now());
+        String outputBase = "settings/output/request-" + timestamp; // sin extensión
+        return procesarConfig(config, outputBase);
+    }
 
-        InputStream input = getClass().getClassLoader().getResourceAsStream(ruta);
-        System.out.println("¿InputStream nulo? " + (input == null));
-        if (input == null) {
-            System.out.println("No se encontro el archivo " + ruta);
-            throw new IllegalArgumentException("Archivo no encontrado: " + ruta);
+    public Object procesarConfig(QueryConfig config, String outputBasePathNoExt) throws Exception {
+        // Conjuntos auxiliares
+        Set<String> usefullTags = new HashSet<>();
+        Set<String> unusedTags = new HashSet<>();
+
+        // Llamada al dominio (sin cambios)
+        CDomain.courseDistances(
+                config.tags,
+                usefullTags,
+                unusedTags,
+                config.modality,
+                config.userStatus,
+                config.minDuration,
+                config.maxDuration,
+                config.organizers,
+                config.format,
+                config.duration,
+                config.organizer,
+                config.status,
+                config.strongTags
+        );
+
+        // Mostrar info de salida
+        System.out.println("Tags útiles: " + usefullTags);
+        System.out.println("Tags no encontrados: " + unusedTags);
+
+        // Guardar resultados (JSON y PDF) usando la misma base
+        GibertDistance.getInstance().saveRecommendationsAsJson(outputBasePathNoExt + ".json");
+        GibertDistance.getInstance().saveRecommendationsAsPDF(outputBasePathNoExt + ".pdf");
+
+        // *** FIX: leer el JSON que acabamos de escribir, incluyendo extensión .json ***
+        try (FileReader reader = new FileReader(outputBasePathNoExt + ".json", StandardCharsets.UTF_8)) {
+            return gson.fromJson(reader, Object.class);
         }
-        Gson gson = new Gson();
-            try {
-                String content = new Scanner(input, StandardCharsets.UTF_8).useDelimiter("\\A").next();
-                QueryConfig config = gson.fromJson(content, QueryConfig.class);
-                System.out.println("Configuración cargada:");
-                System.out.println(config);
-
-                // Crear conjuntos auxiliares
-                Set<String> usefullTags = new HashSet<>();
-                Set<String> unusedTags = new HashSet<>();
-
-                // Llamar al método del dominio
-                CDomain.courseDistances(
-                        config.tags,
-                        usefullTags,
-                        unusedTags,
-                        config.modality,
-                        config.userStatus,
-                        config.minDuration,
-                        config.maxDuration,
-                        config.organizers,
-                        config.format,
-                        config.duration,
-                        config.organizer,
-                        config.status,
-                        config.strongTags
-                );
-
-                // Mostrar información de salida
-                System.out.println("Tags útiles: " + usefullTags);
-                System.out.println("Tags no encontrados: " + unusedTags);
-                String outputPath = "settings/output/"+filename.substring(0,filename.lastIndexOf('.'));
-                System.out.println(outputPath);
-                GibertDistance.getInstance().saveRecommendationsAsJson(outputPath+".json");
-                GibertDistance.getInstance().saveRecommendationsAsPDF(outputPath+".pdf");
-                try (FileReader reader = new FileReader("settings/output/"+filename, StandardCharsets.UTF_8)) {
-                    return gson.fromJson(reader, Object.class);
-                }
-            } catch (IOException e) {
-                System.err.println("Error al leer el archivo: " + e.getMessage());
-            }
-
-
-        return null;
     }
 
 
