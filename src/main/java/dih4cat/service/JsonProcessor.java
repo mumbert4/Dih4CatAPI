@@ -46,16 +46,6 @@ public class JsonProcessor {
         }
     }
 
-    public Object procesarJson(JsonElement jsonBody) throws Exception {
-        System.out.println("JSON recibido: " + jsonBody);
-        QueryConfig config = gson.fromJson(jsonBody, QueryConfig.class);
-        System.out.println("Configuración parseada desde JSON:");
-        System.out.println(config);
-
-        String timestamp = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").format(LocalDateTime.now());
-        String outputBase = "settings/output/request-" + timestamp; // sin extensión
-        return procesarConfig(config, outputBase);
-    }
 
     public Object procesarConfig(QueryConfig config, String outputBasePathNoExt) throws Exception {
         // Conjuntos auxiliares
@@ -76,7 +66,8 @@ public class JsonProcessor {
                 config.duration,
                 config.organizer,
                 config.status,
-                config.strongTags
+                config.strongTags,
+                config.numCourses
         );
 
         // Mostrar info de salida
@@ -129,6 +120,12 @@ public class JsonProcessor {
             System.out.println("NOT FOUND");
             e.printStackTrace();
         }
+    }
+
+    public boolean updateDB(){
+        System.out.println("Actualitzant fitxer csv de cursos");
+        CDomain.initializeData(true, data);
+        return true;
     }
 
     private static String extractPath(String line) {

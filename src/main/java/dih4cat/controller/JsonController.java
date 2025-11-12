@@ -33,4 +33,10 @@ public class JsonController {
             return ResponseEntity.internalServerError().body("Error interno al procesar el JSON");
         }
     }
+
+    @PostMapping("/updateDB")
+    public ResponseEntity<Object> updateDB(){
+        boolean updated = jsonProcessor.updateDB();
+        return ResponseEntity.ok(updated);
+    }
 }

@@ -154,12 +154,13 @@ public class GibertDistance {
             System.out.println();
         }
     }
-    public void courseDistances(Set<String> selectedTags, Set<String> usefullTags, Set<String> unusedTags, String modality, String userStatus , Integer minDuration, Integer maxDuration, Set<String> organizers, boolean format, boolean duration, boolean organizer, boolean status, boolean strongTags){
+    public void courseDistances(Set<String> selectedTags, Set<String> usefullTags, Set<String> unusedTags, String modality, String userStatus , Integer minDuration, Integer maxDuration, Set<String> organizers, boolean format, boolean duration, boolean organizer, boolean status, boolean strongTags, Integer numCoursesWanted){
         mapOrg = d.getMap();
         percentilHours = d.getPercentilHours();
         System.out.println("Gib percentil hours: "+percentilHours);
         System.out.println("GIBERT DISTANCE");
         System.out.println(mapOrg);
+        k = numCoursesWanted;
         //primer pillam els k cursos que mes s'assemblin per tags, despres li afegim les distancies de lo altre
         allTags = d.getTags(); //tots els tags
         this.usefullTags = new HashSet<>();

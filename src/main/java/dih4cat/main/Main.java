@@ -76,7 +76,8 @@ public class Main {
                             config.duration,
                             config.organizer,
                             config.status,
-                            config.strongTags
+                            config.strongTags,
+                            config.numCourses
                     );
 
                     // Mostrar información de salida

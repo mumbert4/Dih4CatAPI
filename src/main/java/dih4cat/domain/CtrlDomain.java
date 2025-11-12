@@ -40,9 +40,6 @@ public class CtrlDomain {
     public void initializeData(boolean auto, String path){
         manager.initiateData(auto,path);
     }
-    public void initializeData(){
-        manager.initializeData();
-    }
 
     public LinkedList<String> getCols(){
         return manager.getCols();
@@ -52,8 +49,8 @@ public class CtrlDomain {
     }
 
     //FUNCIONS USER SCREEN
-    public void courseDistances(Set<String> selectedTags, Set<String> usefullTags, Set<String> unusedTags, String modality, String userStatus, Integer minDuration, Integer maxDuration, Set<String> organizers, boolean format, boolean duration, boolean organizer, boolean status, boolean strongTags){
-        GIB.courseDistances(selectedTags,usefullTags, unusedTags, modality, userStatus ,minDuration, maxDuration, organizers, format, duration, organizer, status, strongTags);
+    public void courseDistances(Set<String> selectedTags, Set<String> usefullTags, Set<String> unusedTags, String modality, String userStatus, Integer minDuration, Integer maxDuration, Set<String> organizers, boolean format, boolean duration, boolean organizer, boolean status, boolean strongTags, Integer numCourses){
+        GIB.courseDistances(selectedTags,usefullTags, unusedTags, modality, userStatus ,minDuration, maxDuration, organizers, format, duration, organizer, status, strongTags,numCourses);
     }
 
     public LinkedList<Vector<Object>> getKvalues(){
