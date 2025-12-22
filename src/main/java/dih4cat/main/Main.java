@@ -16,24 +16,26 @@ import java.util.Scanner;
 import java.util.Set;
 
 import com.google.gson.*;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static String data = "";
     public static String onto = "";
-    public static boolean getOnto,getData;
+    public static boolean getOnto, getData;
     private static CtrlDomain CDomain;
+
     public static void main(String[] args) {
         getOnto = false;
         getData = false;
         getPaths();
         CDomain = CtrlDomain.getInstance();
         CDomain.setGibert();
-        if(getOnto){
+        if (getOnto) {
             Graph.getInstance().importFile(new File(onto));
             CDomain.completeMatrix();
         }
-        if(getData){
+        if (getData) {
             CDomain.initializeData(true, data);
         }
 
@@ -77,30 +79,29 @@ public class Main {
                             config.organizer,
                             config.status,
                             config.strongTags,
-                            config.numCourses
-                    );
+                            config.numCourses,
+                            null,
+                            null);
 
                     // Mostrar información de salida
                     System.out.println("Tags útiles: " + usefullTags);
                     System.out.println("Tags no encontrados: " + unusedTags);
-                    String outputPath = "settings/output/"+input;
+                    String outputPath = "settings/output/" + input;
                     System.out.println(outputPath);
                     System.out.println("Iniciando el programa...");
                     System.out.println("Path de salida: " + outputPath);
-                    GibertDistance.getInstance().saveRecommendationsAsJson(outputPath+".json");
-                    GibertDistance.getInstance().saveRecommendationsAsPDF(outputPath+input+".pdf");
+                    GibertDistance.getInstance().saveRecommendationsAsJson(outputPath + ".json");
+                    GibertDistance.getInstance().saveRecommendationsAsPDF(outputPath + input + ".pdf");
                 } catch (IOException e) {
                     System.err.println("Error al leer el archivo: " + e.getMessage());
                 }
-            }
-            else {
+            } else {
                 System.err.println("Archivo no encontrado: " + examplePath);
             }
         }
     }
 
-
-    public static void getPaths(){
+    public static void getPaths() {
         String jsonFilePath = "settings/paths.json"; // Ruta del fichero JSON
         String pathOnt = null;
         System.out.println(System.getProperty("user.dir"));
@@ -119,7 +120,7 @@ public class Main {
             }
 
             // Set extracted paths to variables (assuming `data` and `onto` are accessible)
-            System.out.printf("pathOnt: %s\npathData: %s\n",pathOnt,pathData);
+            System.out.printf("pathOnt: %s\npathData: %s\n", pathOnt, pathData);
             data = pathData;
             onto = pathOnt;
             System.out.println(data);
@@ -127,7 +128,7 @@ public class Main {
             // Check if files exist at the specified paths
             getData = pathData != null && Files.exists(Paths.get(pathData)) && !pathData.isBlank();
             getOnto = pathOnt != null && Files.exists(Paths.get(pathOnt)) && !pathOnt.isBlank();
-            System.out.println("MAIN GETPATHS: "+ getData + " " + getOnto);
+            System.out.println("MAIN GETPATHS: " + getData + " " + getOnto);
 
         } catch (IOException e) {
             System.out.println("NOT FOUND");
@@ -138,7 +139,7 @@ public class Main {
     private static String extractPath(String line) {
         // Find start and end of the path value within the quotes
         int start = line.indexOf(":") + 3; // Position after colon and opening quote
-        int end = line.lastIndexOf("\"");  // Position of closing quote
+        int end = line.lastIndexOf("\""); // Position of closing quote
         return line.substring(start, end);
     }
 }

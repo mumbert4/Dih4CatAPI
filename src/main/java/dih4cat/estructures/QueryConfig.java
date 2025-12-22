@@ -1,6 +1,5 @@
 package dih4cat.estructures;
 
-
 import java.util.Set;
 
 public class QueryConfig {
@@ -12,6 +11,8 @@ public class QueryConfig {
     public String modality;
     public String time;
     public String userStatus;
+    public String fromTo;
+    public String untilTo;
     public boolean format;
     public boolean organizer;
     public boolean duration;
@@ -29,6 +30,8 @@ public class QueryConfig {
                 ", modality='" + modality + '\'' +
                 ", time='" + time + '\'' +
                 ", userStatus='" + userStatus + '\'' +
+                ", fromTo='" + fromTo + '\'' +
+                ", untilTo='" + untilTo + '\'' +
                 ", format=" + format +
                 ", organizer=" + organizer +
                 ", duration=" + duration +
