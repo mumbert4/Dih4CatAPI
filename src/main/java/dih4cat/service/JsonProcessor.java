@@ -134,4 +134,11 @@ public class JsonProcessor {
         return line.substring(start, end);
     }
 
+    public Set<String> getOntologyNodes() {
+        Set<String> allNodes = CDomain.getTags();
+        Set<String> filteredNodes = new HashSet<>(allNodes);
+        filteredNodes.remove("arrel");
+        return filteredNodes;
+    }
+
 }

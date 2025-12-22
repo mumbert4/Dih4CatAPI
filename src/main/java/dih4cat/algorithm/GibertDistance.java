@@ -255,8 +255,8 @@ public class GibertDistance {
                     // Obtener fechas del curso
                     String startDateStr = (String) ItemManager.getInstance().getItem(i).attributes.get("Start.Date")
                             .getValue();
-                    String endDateStr = (String) ItemManager.getInstance().getItem(i).attributes.get("End..Date")
-                            .getValue(); // Note: Double dot in original code
+                    String endDateStr = (String) ItemManager.getInstance().getItem(i).attributes.get("End.Date")
+                            .getValue();
 
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                     LocalDate courseStart = LocalDate.parse(startDateStr, formatter);
@@ -416,14 +416,14 @@ public class GibertDistance {
                 entry.put("Activity.name", item.attributes.get("Activity.name").getValue());
                 entry.put("tags", item.getTags());
                 entry.put("Start.Date", item.attributes.get("Start.Date").getValue());
-                entry.put("End..Date", item.attributes.get("End..Date").getValue());
+                entry.put("End.Date", item.attributes.get("End.Date").getValue());
                 entry.put("status", item.status);
                 entry.put("location", item.modality);
                 entry.put("duration_hours", item.duration);
                 entry.put("Organizer.Node", item.attributes.get("Organizer.Node").getValue());
-                entry.put("Organizer..entity.", item.attributes.get("Organizer..entity.").getValue());
-                entry.put("Programa...enllaçar.document",
-                        item.attributes.get("Programa...enllaçar.document").getValue());
+                entry.put("Organizer.entity", item.attributes.get("Organizer.entity").getValue());
+                entry.put("Programa.enllaçar.document",
+                        item.attributes.get("Programa.enllaçar.document").getValue());
                 entry.put("Distance", Math.round(item.distance * 1000.0) / 1000.0);
 
                 outputList.add(entry);
@@ -477,8 +477,8 @@ public class GibertDistance {
                 table.addCell("Start.Date");
                 table.addCell(String.valueOf(item.attributes.get("Start.Date").getValue()));
 
-                table.addCell("End..Date");
-                table.addCell(String.valueOf(item.attributes.get("End..Date").getValue()));
+                table.addCell("End.Date");
+                table.addCell(String.valueOf(item.attributes.get("End.Date").getValue()));
 
                 table.addCell("Status");
                 table.addCell(item.status);
@@ -492,11 +492,11 @@ public class GibertDistance {
                 table.addCell("Organizer.Node");
                 table.addCell(String.valueOf(item.attributes.get("Organizer.Node").getValue()));
 
-                table.addCell("Organizer..entity.");
-                table.addCell(String.valueOf(item.attributes.get("Organizer..entity.").getValue()));
+                table.addCell("Organizer.entity");
+                table.addCell(String.valueOf(item.attributes.get("Organizer.entity").getValue()));
 
-                table.addCell("Programa...enllaçar.document");
-                table.addCell(String.valueOf(item.attributes.get("Programa...enllaçar.document").getValue()));
+                table.addCell("Programa.enllaçar.document");
+                table.addCell(String.valueOf(item.attributes.get("Programa.enllaçar.document").getValue()));
 
                 table.addCell("Distance");
                 table.addCell(String.valueOf(Math.round(item.distance * 1000.0) / 1000.0));
