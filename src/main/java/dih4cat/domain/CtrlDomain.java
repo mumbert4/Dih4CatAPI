@@ -4,36 +4,41 @@ import dih4cat.algorithm.GibertDistance;
 import dih4cat.graph.Graph;
 import dih4cat.graph.Node;
 import dih4cat.item.ItemManager;
+import org.springframework.stereotype.Service;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
 import java.util.*;
 
+/**
+ * Servicio de control de dominio.
+ * Actúa como fachada que coordina entre el gestor de items, el grafo de ontología
+ * y el algoritmo de distancia de Gibert.
+ */
+@Service
 public class CtrlDomain {
 
-    private static CtrlDomain singleton;
-    private static ItemManager manager;
-    private static Graph graph;
-    private static GibertDistance GIB;
+    private final ItemManager manager;
+    private final Graph graph;
+    private GibertDistance gibertDistance;
 
-    public static CtrlDomain getInstance() {
-        if (singleton == null)
-            singleton = new CtrlDomain();
-        return singleton;
+    /**
+     * Constructor con inyección de dependencias.
+     * @param manager Gestor de items
+     * @param graph Grafo de ontología
+     */
+    public CtrlDomain(ItemManager manager, Graph graph) {
+        this.manager = manager;
+        this.graph = graph;
     }
 
-    private CtrlDomain() {
-        initializeCtrlDomain();
-    }
-
-    private void initializeCtrlDomain() {
-        manager = ItemManager.getInstance();
-        graph = Graph.getInstance();
-
-    }
-
-    public void setGibert() {
-        GIB = GibertDistance.getInstance();
+    /**
+     * Establece el algoritmo de distancia de Gibert.
+     * Se llama después del inicio de la aplicación.
+     * @param gibertDistance Instancia del servicio GibertDistance
+     */
+    public void setGibertDistance(GibertDistance gibertDistance) {
+        this.gibertDistance = gibertDistance;
     }
 
     // FUNCIONS DATA SCREEN
@@ -54,20 +59,20 @@ public class CtrlDomain {
             String modality, String userStatus, Integer minDuration, Integer maxDuration, Set<String> organizers,
             boolean format, boolean duration, boolean organizer, boolean status, boolean strongTags, Integer numCourses,
             String fromTo, String untilTo) {
-        GIB.courseDistances(selectedTags, usefullTags, unusedTags, modality, userStatus, minDuration, maxDuration,
+        gibertDistance.courseDistances(selectedTags, usefullTags, unusedTags, modality, userStatus, minDuration, maxDuration,
                 organizers, format, duration, organizer, status, strongTags, numCourses, fromTo, untilTo);
     }
 
     public LinkedList<Vector<Object>> getKvalues() {
-        return manager.getKValues(GIB.getRecomended());
+        return manager.getKValues(gibertDistance.getRecomended());
     }
 
     public void setNCourses(Integer n) {
-        GIB.setNCourses(n);
+        gibertDistance.setNCourses(n);
     }
 
     public void setMethod(Boolean b) {
-        GIB.setMethod(b);
+        gibertDistance.setMethod(b);
     }
 
     // FUNCIONS GRAPH SCREEN
@@ -84,7 +89,7 @@ public class CtrlDomain {
     }
 
     public void completeMatrix() {
-        GIB.completeMatrix(graph.getIDs());
+        gibertDistance.completeMatrix(graph.getIDs());
     }
 
     public Integer getNextNode(HashSet<Integer> aux) {

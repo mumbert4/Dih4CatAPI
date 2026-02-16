@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: Dih4CatAPI
+  profiles:
+    active: default
+
+# Configuración de rutas de la aplicación
+app:
+  paths:
+    # Ruta al archivo de configuración de rutas (settings/paths.json)
+    config: ${CONFIG_PATH:settings/paths.json}
+    # Ruta al directorio de ejemplos
+    examples: ${EXAMPLES_PATH:settings/examples}
+    # Ruta al directorio de salida
+    output: ${OUTPUT_PATH:settings/output}
+    # Ruta para matriz de distancias (CSV)
+    matrix: ${MATRIX_PATH:settings/matrix.csv}
+
+# Logging
+logging:
+  level:
+    root: INFO
+    dih4cat: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"

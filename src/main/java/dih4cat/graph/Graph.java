@@ -1,39 +1,57 @@
 package dih4cat.graph;
 
 import dih4cat.algorithm.GibertDistance;
+import org.springframework.stereotype.Service;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-
+/**
+ * Servicio que gestiona el grafo de la ontología.
+ * Contiene nodos (conceptos) y sus relaciones jerárquicas.
+ */
+@Service
 public class Graph {
 
-    private static Graph singleton;
     private Map<String, Node> nodes;
-    private Map<Integer,Node> nodesId;
-    Integer nodeId;
+    private Map<Integer, Node> nodesId;
+    private Integer nodeId;
+    private GibertDistance gibertDistance;
 
-
-
-
-    private Graph(){
+    /**
+     * Constructor que inicializa las estructuras de datos del grafo.
+     * La inyección de GibertDistance se realiza a través de setter para evitar ciclos.
+     */
+    public Graph() {
         initialize();
     }
-    public static Graph getInstance(){
-        if(singleton == null) singleton = new Graph();
-        return singleton;
+
+    /**
+     * Establece la instancia de GibertDistance (inyección de setter para evitar ciclos).
+     * @param gibertDistance Instancia del servicio GibertDistance
+     */
+    public void setGibertDistance(GibertDistance gibertDistance) {
+        this.gibertDistance = gibertDistance;
     }
 
-    public HashSet<String> getAncestors(Integer i){
+    /**
+     * Obtiene los antepasados de un nodo identificado por su ID.
+     * @param i ID del nodo
+     * @return Conjunto de antepasados del nodo
+     */
+    public HashSet<String> getAncestors(Integer i) {
         return nodesId.get(i).getAncestors();
     }
-    public void initialize(){
+
+    /**
+     * Inicializa las estructuras internas del grafo.
+     */
+    public void initialize() {
         nodes = new HashMap<>();
         nodeId = 0;
         nodesId = new HashMap<>();
-
     }
 
     public void changeName(Integer id, String name){
@@ -133,7 +151,7 @@ public class Graph {
         //Node a -> Pare ------ Node b -> fill
         father.addChild(child);
         child.setParent(father);
-        if(nou)GibertDistance.getInstance().calculateDistance(child.getId());
+        if(nou && gibertDistance != null) gibertDistance.calculateDistance(child.getId());
     }
 
     public Boolean validEdge(Integer father, Integer child){

@@ -1,7 +1,7 @@
 package dih4cat.item;
 
-import dih4cat.estructures.Column;
-import dih4cat.estructures.ColumnDouble;
+import dih4cat.structures.Column;
+import dih4cat.structures.ColumnDouble;
 
 import java.util.HashMap;
 import java.util.Set;
