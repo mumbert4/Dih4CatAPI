@@ -1,0 +1,88 @@
+[
+  {
+    "Activity.name": "From Citizen Data Scientists to Predictive Quality in Manufacturing",
+    "tags": [
+      "data science",
+      "predictive models",
+      "eficiencia",
+      "calidad"
+    ],
+    "Start.Date": "30/09/2022",
+    "End.Date": "30/09/2022",
+    "status": "executed",
+    "location": "Online",
+    "duration_hours": 0.0,
+    "Organizer.Node": "Intel·ligència Artificial",
+    "Organizer.entity": "Eurecat (CIDAI)",
+    "Programa.enllaçar.document": "https://cidai.eu/masterclass-from-citizen-data-scientists-to-predictive-quality-in-manufacturing/",
+    "Distance": 0.62
+  },
+  {
+    "Activity.name": "Curso de Inteligencia Computacional",
+    "tags": [
+      "computer",
+      "inteligente",
+      "ia"
+    ],
+    "Start.Date": "1/8/2025",
+    "End.Date": "2/10/2025",
+    "status": "Curs",
+    "location": "Online",
+    "duration_hours": 20.0,
+    "Organizer.Node": "Intel·ligència Artificial",
+    "Organizer.entity": "UPC",
+    "Programa.enllaçar.document": "https://esdeveniments.upc.edu/111109/detail/curso-de-inteligencia-computacional.html",
+    "Distance": 0.707
+  },
+  {
+    "Activity.name": "Infografia i visualització de dades ",
+    "tags": [
+      "ia",
+      "big data",
+      "vision artificial"
+    ],
+    "Start.Date": "5/9/2023",
+    "End.Date": "5/23/2023",
+    "status": "Curs",
+    "location": "Online",
+    "duration_hours": 15.0,
+    "Organizer.Node": "Intel·ligència Artificial",
+    "Organizer.entity": "Eurecat",
+    "Programa.enllaçar.document": "https://eurecatacademy.org/ca/cursos/curs-dinfografia-i-visualitzacio-de-dades-online/",
+    "Distance": 0.81
+  },
+  {
+    "Activity.name": "IA generativa i creativitat: eines i aplicacions",
+    "tags": [
+      "ia",
+      "large language models",
+      "tools"
+    ],
+    "Start.Date": "1/13/2025",
+    "End.Date": "1/21/2025",
+    "status": "Curs",
+    "location": "Online",
+    "duration_hours": 20.0,
+    "Organizer.Node": "Intel·ligència Artificial",
+    "Organizer.entity": "UPC",
+    "Programa.enllaçar.document": "https://esdeveniments.upc.edu/111785/detail/curs-dintelmligencia-artificial-generativa-i-creativitat-eines-i-aplicacions.html",
+    "Distance": 0.81
+  },
+  {
+    "Activity.name": "Cicle Capacitacions píndoles al territori (format MOOC)",
+    "tags": [
+      "ia",
+      "fabricacion avanzada",
+      "ciberseguretat"
+    ],
+    "Start.Date": "12/15/2024",
+    "End.Date": "12/31/2025",
+    "status": "MOOC",
+    "location": "Online",
+    "duration_hours": 20.0,
+    "Organizer.Node": "Transversal",
+    "Organizer.entity": "i2CAT",
+    "Programa.enllaçar.document": "https://dih4cat.eurecatacademy.org/",
+    "Distance": 0.81
+  }
+]

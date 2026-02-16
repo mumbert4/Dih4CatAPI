@@ -25,7 +25,7 @@ public class JsonController {
         try {
             String timestamp = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").format(LocalDateTime.now());
             String outputBase = "settings/output/request-" + timestamp; // sin extensión
-            Object result = jsonProcessor.procesarConfig(config,outputBase); // ver abajo
+            Object result = jsonProcessor.procesarConfig(config, outputBase); // ver abajo
             return ResponseEntity.ok(result);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -34,8 +34,13 @@ public class JsonController {
         }
     }
 
+    @GetMapping("/ontology/nodes")
+    public ResponseEntity<Object> getOntologyNodes() {
+        return ResponseEntity.ok(jsonProcessor.getOntologyNodes());
+    }
+
     @PostMapping("/updateDB")
-    public ResponseEntity<Object> updateDB(){
+    public ResponseEntity<Object> updateDB() {
         boolean updated = jsonProcessor.updateDB();
         return ResponseEntity.ok(updated);
     }

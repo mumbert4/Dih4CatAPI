@@ -1,4 +1,4 @@
-Activity.name,tags,Start.Date,End..Date,status,location,duration_hours,Organizer.Node,Organizer..entity.,Programa...enllaçar.document
+Activity.name,tags,Start.Date,End.Date,status,location,duration_hours,Organizer.Node,Organizer.entity,Programa.enllaçar.document
 "Projecte Singular - ""Connecta Jove VOR"" (3D Printing)","['3d printing']",01/02/2022,25/05/2022,executed,Presential,365.0,Fabricació Additiva Impressió 3D,LEITAT,http://www.3dprintingdesign.es/es/noticia/2a-edicion-del-programa-de-formacion-en-impresion-3d-para-jovenes-desempleados
 "Gestió d’Equips - Lideratge, motivació i gestió de conflictes ","['leadership',' motivation',' gestion']",16/05/2022,27/06/2022,executed,Presential,30.0,Fabricació Avançada i Robòtica,Eurecat,(ADAPTAT) https://eurecatacademy.org/ca/cursos/lideratge-dequips-2/
 1a edició: Curs Indústria 4.0: Tecnologia avançada al teu abast,"['indústria 4.0',' tecnologia avanzada']",19/05/2022,30/06/2022,executed,Presential,39.0,Tots els nodes,ACCIÓ,https://agenda.accio.gencat.cat/cercador/-/actes/2022/04/19/1310778/-

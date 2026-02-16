@@ -26,26 +26,25 @@ public class JsonProcessor {
 
     public static String data = "";
     public static String onto = "";
-    public static boolean getOnto,getData;
+    public static boolean getOnto, getData;
     private static CtrlDomain CDomain;
 
     private final Gson gson = new Gson();
 
-    public static void initialize(){
+    public static void initialize() {
         getOnto = false;
         getData = false;
         getPaths();
         CDomain = CtrlDomain.getInstance();
         CDomain.setGibert();
-        if(getOnto){
+        if (getOnto) {
             Graph.getInstance().importFile(new File(onto));
             CDomain.completeMatrix();
         }
-        if(getData){
+        if (getData) {
             CDomain.initializeData(true, data);
         }
     }
-
 
     public Object procesarConfig(QueryConfig config, String outputBasePathNoExt) throws Exception {
         // Conjuntos auxiliares
@@ -67,8 +66,9 @@ public class JsonProcessor {
                 config.organizer,
                 config.status,
                 config.strongTags,
-                config.numCourses
-        );
+                config.numCourses,
+                config.fromTo,
+                config.untilTo);
 
         // Mostrar info de salida
         System.out.println("Tags útiles: " + usefullTags);
@@ -78,20 +78,19 @@ public class JsonProcessor {
         GibertDistance.getInstance().saveRecommendationsAsJson(outputBasePathNoExt + ".json");
         GibertDistance.getInstance().saveRecommendationsAsPDF(outputBasePathNoExt + ".pdf");
 
-        // *** FIX: leer el JSON que acabamos de escribir, incluyendo extensión .json ***
+        // *** FIX: leer el JSON que acabamos de escribir, incluyendo extensión .json
+        // ***
         try (FileReader reader = new FileReader(outputBasePathNoExt + ".json", StandardCharsets.UTF_8)) {
             return gson.fromJson(reader, Object.class);
         }
     }
 
-
-
-    public static void getPaths(){
+    public static void getPaths() {
         String jsonFilePath = "settings/paths.json"; // Ruta del fichero JSON
         String pathOnt = null;
         String pathData = null;
         System.out.println(System.getProperty("user.dir"));
-        System.out.println("JSON PATH "+jsonFilePath);
+        System.out.println("JSON PATH " + jsonFilePath);
         try (BufferedReader reader = new BufferedReader(new FileReader(jsonFilePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -106,7 +105,7 @@ public class JsonProcessor {
             }
 
             // Set extracted paths to variables (assuming `data` and `onto` are accessible)
-            System.out.printf("pathOnt: %s\npathData: %s\n",pathOnt,pathData);
+            System.out.printf("pathOnt: %s\npathData: %s\n", pathOnt, pathData);
             data = pathData;
             onto = pathOnt;
             System.out.println(data);
@@ -114,7 +113,7 @@ public class JsonProcessor {
             // Check if files exist at the specified paths
             getData = pathData != null && Files.exists(Paths.get(pathData)) && !pathData.isBlank();
             getOnto = pathOnt != null && Files.exists(Paths.get(pathOnt)) && !pathOnt.isBlank();
-            System.out.println("MAIN GETPATHS: "+ getData + " " + getOnto);
+            System.out.println("MAIN GETPATHS: " + getData + " " + getOnto);
 
         } catch (IOException e) {
             System.out.println("NOT FOUND");
@@ -122,7 +121,7 @@ public class JsonProcessor {
         }
     }
 
-    public boolean updateDB(){
+    public boolean updateDB() {
         System.out.println("Actualitzant fitxer csv de cursos");
         CDomain.initializeData(true, data);
         return true;
@@ -131,8 +130,15 @@ public class JsonProcessor {
     private static String extractPath(String line) {
         // Find start and end of the path value within the quotes
         int start = line.indexOf(":") + 3; // Position after colon and opening quote
-        int end = line.lastIndexOf("\"");  // Position of closing quote
+        int end = line.lastIndexOf("\""); // Position of closing quote
         return line.substring(start, end);
+    }
+
+    public Set<String> getOntologyNodes() {
+        Set<String> allNodes = CDomain.getTags();
+        Set<String> filteredNodes = new HashSet<>(allNodes);
+        filteredNodes.remove("arrel");
+        return filteredNodes;
     }
 
 }

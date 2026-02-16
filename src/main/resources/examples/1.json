@@ -1,13 +1,22 @@
 {
-  "tags": ["programming", "ai", "data science"],
-  "organizers": ["UPC", "BSC"],
+  "tags": [
+    "programming",
+    "ai",
+    "data science"
+  ],
+  "organizers": [
+    "UPC",
+    "BSC"
+  ],
   "minDuration": 5,
   "maxDuration": 20,
   "numCourses": 5,
   "modality": "Online",
   "time": "Hours",
-  "userStatus": "Planned",
-  "format": false,
+  "userStatus": "All",
+  "fromTo": "01/01/2022",
+  "untilTo": "31/12/2022",
+  "format": true,
   "organizer": false,
   "duration": false,
   "status": false,
