@@ -2,7 +2,7 @@ package dih4cat.controller;
 
 import com.google.gson.JsonElement;
 
-import dih4cat.estructures.QueryConfig;
+import dih4cat.structures.QueryConfig;
 import dih4cat.service.JsonProcessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

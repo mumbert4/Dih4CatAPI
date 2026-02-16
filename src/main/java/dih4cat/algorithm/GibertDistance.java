@@ -7,6 +7,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import dih4cat.domain.CtrlDomain;
 import dih4cat.item.Item;
 import dih4cat.item.ItemManager;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,9 +20,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Servicio que implementa el algoritmo de distancia de Gibert para
+ * calcular similitud entre cursos y preferencias del usuario.
+ */
+@Service
 public class GibertDistance {
-
-    private static GibertDistance singleton;
 
     HashMap<Integer, HashMap<Integer, Double>> distancesTags;
     Integer k;
@@ -29,7 +33,9 @@ public class GibertDistance {
     Set<String> usefullTags;
     List<AbstractMap.SimpleEntry<Integer, LinkedList<Double>>> distanceCourses, distanceGood;
     List<AbstractMap.SimpleEntry<Integer, Double>> distanceCourses2;
-    CtrlDomain d;
+    private CtrlDomain ctrlDomain;
+    private final ItemManager itemManager;
+    private final dih4cat.config.ApplicationConfiguration appConfig;
     HashSet<String> noTrobats;
     Set<String> allTags;
     HashMap<Integer, Double> distance;
@@ -39,19 +45,27 @@ public class GibertDistance {
     public Integer numCourses;
     Boolean avg = false;
 
-    public static GibertDistance getInstance() {
-        if (singleton == null)
-            singleton = new GibertDistance();
-        return singleton;
-    }
-
-    private GibertDistance() {
-
+    /**
+     * Constructor público para inyección de dependencias.
+     * La inyección de CtrlDomain se realiza a través de setter para evitar
+     * dependencias circulares.
+     * @param itemManager Gestor de items inyectado
+     */
+    public GibertDistance(ItemManager itemManager, dih4cat.config.ApplicationConfiguration appConfig) {
+        this.itemManager = itemManager;
+        this.appConfig = appConfig;
         distancesTags = new HashMap<>();
         distance = new HashMap<>();
-        d = CtrlDomain.getInstance();
         k = 5;
         noTrobats = new HashSet<>();
+    }
+
+    /**
+     * Establece la instancia de CtrlDomain (inyección de setter para evitar ciclos).
+     * @param ctrlDomain Instancia del servicio CtrlDomain
+     */
+    public void setCtrlDomain(CtrlDomain ctrlDomain) {
+        this.ctrlDomain = ctrlDomain;
     }
 
     public void completeMatrix(Set<Integer> s) {// Feim la matriu de distancies de tags
@@ -79,10 +93,10 @@ public class GibertDistance {
 
     public double getDistance(Integer i, Integer j) {// distancia entre 2 tags
 
-        Set<String> a = d.getAncestors(i);
-        Set<String> b = d.getAncestors(j);
-        a.add(d.idToString(i));
-        b.add(d.idToString(j));
+        Set<String> a = ctrlDomain.getAncestors(i);
+        Set<String> b = ctrlDomain.getAncestors(j);
+        a.add(ctrlDomain.idToString(i));
+        b.add(ctrlDomain.idToString(j));
         Set<String> union = new HashSet<>(a);
         Set<String> intersection = new HashSet<>(a);
 
@@ -98,69 +112,23 @@ public class GibertDistance {
     }
 
     public void csvMatrix() {// guardam matriu distancies a un csv
-        try (FileWriter writer = new FileWriter("settings/matrix.csv")) {
-            // Escribimos el encabezado de la matriz con los nombres en la primera fila
-            writer.append("       ,");
-            for (Integer col : distancesTags.keySet()) {
-                writer.append(d.idToString(col)).append(",");
-            }
-            writer.append("\n");
-
-            // Escribimos cada fila con los nombres y las distancias
-            for (Integer row : distancesTags.keySet()) {
-                // Primera columna: nombre de la fila
-                writer.append(d.idToString(row)).append(",");
-
-                for (Integer col : distancesTags.keySet()) {
-                    // Obtenemos la distancia entre la fila y la columna, o null si no existe
-                    Double distance = distancesTags.getOrDefault(row, new HashMap<>()).get(col);
-
-                    // Escribimos el valor de la distancia o "-" si no existe
-                    if (distance != null) {
-                        writer.append(String.format(Locale.US, "%.2f", distance)).append(",");
-                    } else {
-                        writer.append("-").append(",");
-                    }
-                }
-                writer.append("\n");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Imprimimos cada fila con los nombres y las distancias
-        for (Integer row : distancesTags.keySet()) {
-            // Primera columna: nombre de la fila
-
-            for (Integer col : distancesTags.keySet()) {
-                // Obtenemos la distancia entre la fila y la columna, o null si no existe
-                Double distance = distancesTags.getOrDefault(row, new HashMap<>()).get(col);
-
-                // Mostramos el valor de la distancia o "-" si no existe
-                if (distance != null) {
-                    System.out.print(distance + "\t");
-                } else {
-                    System.out.print("-\t");
-                }
-            }
-            System.out.println();
-        }
+        String matrixPath = (appConfig != null && appConfig.getMatrix() != null) ? appConfig.getMatrix() : "settings/matrix.csv";
+        GibertMatrixWriter.writeMatrix(distancesTags, ctrlDomain, matrixPath);
     }
 
     public void courseDistances(Set<String> selectedTags, Set<String> usefullTags, Set<String> unusedTags,
             String modality, String userStatus, Integer minDuration, Integer maxDuration, Set<String> organizers,
             boolean format, boolean duration, boolean organizer, boolean status, boolean strongTags,
             Integer numCoursesWanted, String fromTo, String untilTo) {
-        mapOrg = d.getMap();
-        percentilHours = d.getPercentilHours();
+        mapOrg = ctrlDomain.getMap();
+        percentilHours = ctrlDomain.getPercentilHours();
         System.out.println("Gib percentil hours: " + percentilHours);
         System.out.println("GIBERT DISTANCE");
         System.out.println(mapOrg);
         k = numCoursesWanted;
         // primer pillam els k cursos que mes s'assemblin per tags, despres li afegim
         // les distancies de lo altre
-        allTags = d.getTags(); // tots els tags
+        allTags = ctrlDomain.getTags(); // tots els tags
         this.usefullTags = new HashSet<>();
         for (String s : selectedTags) {
             if (!allTags.contains(s.strip())) {
@@ -174,17 +142,17 @@ public class GibertDistance {
         distanceCourses = new ArrayList<>();
         distanceCourses2 = new ArrayList<>();
         comparator = 0;// iniciam a avg
-        Set<Integer> courses = d.getIDs();
+        Set<Integer> courses = ctrlDomain.getIDs();
         courses = filtrat(courses, format, duration, organizer, status, modality, organizers, minDuration, maxDuration,
                 userStatus, strongTags, selectedTags, fromTo, untilTo);
         numCourses = courses.size();
         for (Integer i : courses) {// iteram els cursos
             LinkedList<Double> l = new LinkedList<Double>();
-            Double distanceTags = getTagsDistance(usefullTags, d.getTagsCourse(i));
-            Double distanceHours = getHourDistance(minDuration, maxDuration, (int) d.getDuration(i));
-            Double distanceLocation = getLocationDistance(modality, d.getModality(i));
-            Double distanceOrganizers = getOrganizersDistance(organizers, d.getOrganizer(i));
-            Double distanceStatus = getStatusDistance(userStatus, d.getStatus(i));
+            Double distanceTags = getTagsDistance(usefullTags, ctrlDomain.getTagsCourse(i));
+            Double distanceHours = getHourDistance(minDuration, maxDuration, (int) ctrlDomain.getDuration(i));
+            Double distanceLocation = getLocationDistance(modality, ctrlDomain.getModality(i));
+            Double distanceOrganizers = getOrganizersDistance(organizers, ctrlDomain.getOrganizer(i));
+            Double distanceStatus = getStatusDistance(userStatus, ctrlDomain.getStatus(i));
             l.push(distanceLocation);
             l.push(distanceOrganizers);
             l.push(distanceHours);
@@ -196,7 +164,7 @@ public class GibertDistance {
 
             distanceCourses.add(new AbstractMap.SimpleEntry<Integer, LinkedList<Double>>(i, l));
             distanceCourses2.add(new AbstractMap.SimpleEntry<>(i, a + b + c));
-            ItemManager.getInstance().getItem(i).setDistance(distanceTags);
+            itemManager.getItem(i).setDistance(distanceTags);
             distance.put(i, a + b + c);
 
         }
@@ -215,29 +183,29 @@ public class GibertDistance {
         for (Integer i : courses) {
             boolean valid = true;
             if (format) {
-                System.out.println(modality + " " + d.getModality(i));
-                if (!modality.equals("All") && !d.getModality(i).equals(modality))
+                System.out.println(modality + " " + ctrlDomain.getModality(i));
+                if (!modality.equals("All") && !ctrlDomain.getModality(i).equals(modality))
                     valid = false;
                 System.out.println(valid);
             }
             if (valid && duration) {
                 // System.out.println(minDuration + " " + d.getDuration(i) + " " + maxDuration);
-                if (d.getDuration(i) > maxDuration || d.getDuration(i) < minDuration)
+                if (ctrlDomain.getDuration(i) > maxDuration || ctrlDomain.getDuration(i) < minDuration)
                     valid = false;
                 // System.out.println(valid);
             }
             if (valid && organizer) {
-                if (!organizers.contains(d.getOrganizer(i)))
+                if (!organizers.contains(ctrlDomain.getOrganizer(i)))
                     valid = false;
             }
             if (valid && status) {
-                System.out.println(userStatus + " " + d.getStatus(i));
-                if (!userStatus.equals("All") && !d.getStatus(i).equals(userStatus))
+                System.out.println(userStatus + " " + ctrlDomain.getStatus(i));
+                if (!userStatus.equals("All") && !ctrlDomain.getStatus(i).equals(userStatus))
                     valid = false;
                 System.out.println(valid);
             }
             if (valid && strongTags) {
-                Set<String> courseTags = d.getTagsCourse(i);
+                Set<String> courseTags = ctrlDomain.getTagsCourse(i);
                 boolean hasMatch = false;
                 for (String tag : selectedTags) {
                     if (courseTags.contains(tag)) {
@@ -253,9 +221,9 @@ public class GibertDistance {
             if (valid && (fromTo != null || untilTo != null)) {
                 try {
                     // Obtener fechas del curso
-                    String startDateStr = (String) ItemManager.getInstance().getItem(i).attributes.get("Start.Date")
+                    String startDateStr = (String) itemManager.getItem(i).attributes.get("Start.Date")
                             .getValue();
-                    String endDateStr = (String) ItemManager.getInstance().getItem(i).attributes.get("End.Date")
+                    String endDateStr = (String) itemManager.getItem(i).attributes.get("End.Date")
                             .getValue();
 
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -300,13 +268,13 @@ public class GibertDistance {
         distancesTags.put(n, new HashMap<>());
         distancesTags.get(n).put(n, 0.0);
         for (Integer i : s) {
-            double d = getDistance(i, n);
+            double distance = getDistance(i, n);
 
-            distancesTags.get(n).put(i, d);
-            distancesTags.get(i).put(n, d);
+            distancesTags.get(n).put(i, distance);
+            distancesTags.get(i).put(n, distance);
         }
 
-        allTags = d.getTags();
+        allTags = ctrlDomain.getTags();
     }
 
     public double getLocationDistance(String userM, String courseM) {
@@ -314,11 +282,11 @@ public class GibertDistance {
         if (userM.equals(courseM) || userM.equals("All")) {
             return 0.0;
         }
-        double userL = d.getNumLocations(userM);
-        double courseL = d.getNumLocations(courseM);
-        double d = 1 / userL + 1 / courseL;
+        double userL = ctrlDomain.getNumLocations(userM);
+        double courseL = ctrlDomain.getNumLocations(courseM);
+        double distance = 1 / userL + 1 / courseL;
 
-        return d;
+        return distance;
     }
 
     public double getOrganizersDistance(Set<String> organizers, String course) {
@@ -344,7 +312,7 @@ public class GibertDistance {
         if (this.avg) {
             for (String c : courseTags) { // iteram els tags d'un curs
                 for (String u : userTags) {// iteram els tags de l'usuari
-                    Double dist = distancesTags.get(d.stringToId(c)).get(d.stringToId(u));// distacnia entre els tags
+                    Double dist = distancesTags.get(ctrlDomain.stringToId(c)).get(ctrlDomain.stringToId(u));// distacnia entre els tags
                     avg += dist;// afegim la distancia
 
                 }
@@ -356,7 +324,7 @@ public class GibertDistance {
         for (String c : userTags) {
             Double min = 999999999.0;
             for (String u : courseTags) {
-                Double dist = distancesTags.get(d.stringToId(c)).get(d.stringToId(u));// distacnia entre els tags
+                Double dist = distancesTags.get(ctrlDomain.stringToId(c)).get(ctrlDomain.stringToId(u));// distacnia entre els tags
                 if (dist < min) {
                     min = dist;
                 }
@@ -372,8 +340,8 @@ public class GibertDistance {
         if (userS.equals(courseS) || userS.equals("All")) {
             return 0;
         }
-        double userL = d.getNumStatus(userS);
-        double courseL = d.getNumStatus(courseS);
+        double userL = ctrlDomain.getNumStatus(userS);
+        double courseL = ctrlDomain.getNumStatus(courseS);
 
         return 1 / userL + 1 / courseL;
 
@@ -394,7 +362,7 @@ public class GibertDistance {
         for (int i = 0; i < k; ++i) {
             Integer id = distanceCourses2.get(i).getKey();
 
-            ItemManager.getInstance().getItem(id)
+            itemManager.getItem(id)
                     .setDistance(Math.round(distanceCourses2.get(i).getValue() * 1000.0) / 1000.0);
             s.add(id);
             if (i == distanceCourses2.size() - 1)
@@ -406,112 +374,12 @@ public class GibertDistance {
 
     public void saveRecommendationsAsJson(String outputPath) {
         LinkedList<Integer> recommended = getRecomended();
-        List<Map<String, Object>> outputList = new LinkedList<>();
-
-        for (Integer id : recommended) {
-            Item item = ItemManager.getInstance().getItem(id);
-            Map<String, Object> entry = new LinkedHashMap<>();
-
-            try {
-                entry.put("Activity.name", item.attributes.get("Activity.name").getValue());
-                entry.put("tags", item.getTags());
-                entry.put("Start.Date", item.attributes.get("Start.Date").getValue());
-                entry.put("End.Date", item.attributes.get("End.Date").getValue());
-                entry.put("status", item.status);
-                entry.put("location", item.modality);
-                entry.put("duration_hours", item.duration);
-                entry.put("Organizer.Node", item.attributes.get("Organizer.Node").getValue());
-                entry.put("Organizer.entity", item.attributes.get("Organizer.entity").getValue());
-                entry.put("Programa.enllaçar.document",
-                        item.attributes.get("Programa.enllaçar.document").getValue());
-                entry.put("Distance", Math.round(item.distance * 1000.0) / 1000.0);
-
-                outputList.add(entry);
-            } catch (Exception e) {
-                System.err.println("Error accediendo a atributos del dih4cat.item " + id + ": " + e.getMessage());
-            }
-        }
-
-        // Crear carpeta si no existe
-        File outputFile = new File(outputPath);
-        outputFile.getParentFile().mkdirs();
-
-        try (FileWriter writer = new FileWriter(outputFile)) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(outputList, writer);
-            System.out.println("Recomendaciones guardadas en: " + outputPath);
-        } catch (IOException e) {
-            System.err.println("Error al escribir el archivo JSON: " + e.getMessage());
-        }
+        GibertOutput.saveRecommendationsAsJson(itemManager, recommended, outputPath);
     }
 
     public void saveRecommendationsAsPDF(String outputPath) {
         LinkedList<Integer> recommended = getRecomended();
-
-        try {
-            Document document = new Document();
-            PdfWriter.getInstance(document, new FileOutputStream(outputPath));
-            document.open();
-
-            Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
-            Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10);
-            Font textFont = FontFactory.getFont(FontFactory.HELVETICA, 9);
-
-            document.add(new Paragraph("Cursos Recomendados", titleFont));
-            document.add(Chunk.NEWLINE);
-
-            for (Integer id : recommended) {
-                Item item = ItemManager.getInstance().getItem(id);
-
-                Table table = new Table(2);
-                table.setWidth(100);
-                table.setPadding(3);
-
-                table.addCell(new Cell(new Phrase("Activity.name", headerFont)));
-                table.addCell(new Cell(
-                        new Phrase(String.valueOf(item.attributes.get("Activity.name").getValue()), textFont)));
-
-                table.addCell("Tags");
-                table.addCell(item.getTags().toString());
-
-                table.addCell("Start.Date");
-                table.addCell(String.valueOf(item.attributes.get("Start.Date").getValue()));
-
-                table.addCell("End.Date");
-                table.addCell(String.valueOf(item.attributes.get("End.Date").getValue()));
-
-                table.addCell("Status");
-                table.addCell(item.status);
-
-                table.addCell("Location");
-                table.addCell(item.modality);
-
-                table.addCell("Duration (hours)");
-                table.addCell(String.valueOf(item.duration));
-
-                table.addCell("Organizer.Node");
-                table.addCell(String.valueOf(item.attributes.get("Organizer.Node").getValue()));
-
-                table.addCell("Organizer.entity");
-                table.addCell(String.valueOf(item.attributes.get("Organizer.entity").getValue()));
-
-                table.addCell("Programa.enllaçar.document");
-                table.addCell(String.valueOf(item.attributes.get("Programa.enllaçar.document").getValue()));
-
-                table.addCell("Distance");
-                table.addCell(String.valueOf(Math.round(item.distance * 1000.0) / 1000.0));
-
-                document.add(table);
-                document.add(Chunk.NEWLINE);
-            }
-
-            document.close();
-            System.out.println("PDF guardado en: " + outputPath);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error al crear PDF: " + e.getMessage());
-        }
+        GibertOutput.saveRecommendationsAsPDF(itemManager, recommended, outputPath);
     }
 
     public LinkedList<Double> trueDistance(LinkedList<Double> l) {

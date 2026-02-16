@@ -1,6 +1,7 @@
 package dih4cat.item;
 
-import dih4cat.estructures.*;
+import dih4cat.structures.*;
+import org.springframework.stereotype.Service;
 
 import javax.swing.*;
 import java.io.File;
@@ -9,36 +10,30 @@ import java.io.FileReader;
 import java.util.*;
 
 /**
- * Aquesta classe ens gestiona i guarda tots els items del sistema i al
- * distancia que hi ha entre els items
- * Disposa d'un map de Items, amb el seu identificador com a clau i la seva
- * instància de la classe Item com a valor
- * Una matriu de distancies entre els items
- * Un array amb els IDs de tots els items
+ * Servicio que gestiona todos los cursos (items) del sistema.
+ * Mantiene mapas de items, etiquetas, duraciones, modalidades y organizadores.
+ * Se encarga de cargar datos desde archivos CSV.
  */
-
+@Service
 public class ItemManager {
-    Map<Integer, Item> items;
-    LinkedList<String> cols;
-    HashMap<Integer, Set<String>> courseTags;
-    HashMap<Integer, Integer> courseDuration;
-    HashMap<Integer, String> courseLocation;
+    private Map<Integer, Item> items;
+    private LinkedList<String> cols;
+    private HashMap<Integer, Set<String>> courseTags;
+    private HashMap<Integer, Integer> courseDuration;
+    private HashMap<Integer, String> courseLocation;
     public HashMap<String, Integer> mapOrg;
     public HashSet<String> organizers;
-    int nPresential, nOnline, nHybrid;
-    int nExecuted, nActive, nPlanned;
-    private static ItemManager singleton;
+    private int nPresential, nOnline, nHybrid;
+    private int nExecuted, nActive, nPlanned;
 
     public double percentilHours;
 
-    public static ItemManager getInstance() {
-        if (singleton == null)
-            singleton = new ItemManager();
-        return singleton;
-    }
-
-    private ItemManager() {
-
+    /**
+     * Constructor del servicio ItemManager.
+     * Inicializa las estructuras de datos.
+     */
+    public ItemManager() {
+        // @Service auto-instancia
     }
 
     public void initiateData(boolean auto, String path) {

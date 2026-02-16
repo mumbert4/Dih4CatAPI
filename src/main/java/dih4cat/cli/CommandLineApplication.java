@@ -1,4 +1,4 @@
-package dih4cat.main;
+package dih4cat.cli;
 
 import dih4cat.algorithm.GibertDistance;
 import dih4cat.config.ApplicationConfiguration;
@@ -25,7 +25,7 @@ import com.google.gson.Gson;
  * Spring Boot está en dih4cat.App. Para usar esta CLI, ejecutar como aplicación
  * standalone sin Spring.
  */
-public class Main {
+public class CommandLineApplication {
     
     private static ApplicationInitializationService initializationService;
     private static CtrlDomain ctrlDomain;
